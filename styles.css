@@ -15,9 +15,12 @@
     --fs-40: 2.5rem;
     --fs-32: 2rem;
     --fs-24: 1.5rem;
+    --fs-body: 1rem;
+    --divider-space: 3.5rem;
     --container:69.375rem;
 }
-a.underline
+a.underline,
+.projects-underline 
 {
     display: inline-block;
     padding-bottom: 0.625rem;
@@ -33,6 +36,11 @@ a.underline
     background-repeat: repeat-x;
     background-size: 8px 2px;
 }
+.projects-underline 
+{
+    margin-top: calc(var(--divider-space) / 2);
+    margin-bottom: calc(var(--divider-space) / 4);
+}
 html
 {
     box-sizing: border-box;
@@ -47,11 +55,46 @@ html
 body
 {
     margin: 0;
+    overflow-x: hidden;
     font-family: "Space Grotesk", sans-serif;
     background-color: var(--body-bg);
     color: var(--main-text);
     font-size: var(--fs-body);
     line-height: 1.56;
+}
+.grid-list
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    justify-items: center;
+    align-items: start;
+    row-gap: 4rem;
+    column-gap: 6rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    margin-bottom: 0;
+}
+.grid-list li
+{
+    position: relative;
+    font-size: 1.8rem;
+    line-height: 1; /* ensures consistent height */
+    margin: 0;
+    padding-bottom: 0.75rem; /* spacing for underline */
+}
+.grid-list li::after
+{
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background-color: var(--accent);
+    border-radius: 2px;
 }
 a:hover
 {
@@ -65,7 +108,7 @@ a
 }
 svg:hover path
 {
-    fill: var(--accent)
+    fill: var(--accent);
 }
 .wrapper
 {
@@ -75,10 +118,7 @@ svg:hover path
 }
 @media (min-width: 37.5em) /* 600px */
 {
-    .wrapper
-    {
-        width: calc(100% - 3.75rem);
-    }
+    /* breakpoint-specific rules exist later; keep this comment for clarity */
 }
 .header-nav
 {
@@ -90,6 +130,8 @@ gap: 20px 25px;
 color: #000;
 vertical-align: middle;
 align-items: center;
+max-width: var(--container);
+
 }
 .header-home
 {
@@ -126,31 +168,36 @@ align-items: center;
 }
 .hero-headline
 {
-    text-align: center;;
+    text-align: center;
+    margin: 0;
 }
-.hero-contact
-{
+.hero-contact {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    /* ensure Contact button/link has breathing room from the divider */
+    margin-bottom: calc(var(--divider-space) / 2);
 }
 .hero-description
 {
     text-align: center;
 }
+.hero_description
+{
+    margin: 2rem 0rem 2rem 0rem;
+}
 .hero-headline > br
 {
     display: none;
 }
-.hero-divider
+footer .wrapper:first-of-type {
+    margin-top: 0;
+    padding-bottom: var(--divider-space);
+}
+footer .wrapper:last-of-type
 {
-    border:none;
-    border-top: 1px solid var(--sec-text);
-    opacity: 0.3;
-    margin: 2rem 0;
-    width: 100%;
-    margin-top: 4rem;
+    margin-bottom: 0rem;
 }
 h1
 {
@@ -193,10 +240,21 @@ p
         align-items: flex-start;
         justify-content: flex-start;
         text-align: left;
+        margin-block: 0;
     }
     p
     {
         text-align: left;
+    }
+    .grid-list
+    {
+        gap: 4rem 10rem;
+    }
+    .grid-list li
+    {
+        font-size: 2rem;
+        letter-spacing: 0.5px;
+        margin: 1rem 0;
     }
 }
 @media (min-width: 62.5em)
@@ -205,4 +263,119 @@ p
     {
         display: none;
     }
+}
+@media (max-width: 717px) 
+{
+    .grid-list 
+    {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 3rem;
+        column-gap: 3rem;
+    }
+}
+@media (min-width: 718px) and (max-width: 899px)
+{
+    .grid-list
+    {
+        grid-template-columns: repeat(3, 1fr);
+        row-gap: 4rem;
+        column-gap: 6rem;
+    }
+}
+@media (min-width: 900px)
+{
+    .grid-list
+    {
+        grid-template-columns: repeat(3, 1fr);
+        row-gap: 4rem;
+        column-gap: 10rem;
+    }
+    .grid-list li
+    {
+        margin: 1rem 0;
+    }
+}
+/* On any breakpoint with 3 columns (>=718px), force the center-column items into the center column */
+@media (min-width: 718px) {
+    /* Use explicit class for center-column items to avoid fragile nth-child selectors */
+    .grid-list li.center-col {
+        grid-column: 2;
+    }
+    /* make the Projects wrapper adopt the same 3-column grid so the Projects label sits exactly over column 2 */
+    footer .wrapper:last-of-type {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        align-items: center;
+        column-gap: 6rem; /* match .grid-list gap for 3-column mid breakpoint */
+    }
+    footer .wrapper:last-of-type .projects-underline {
+        grid-column: 2;
+        justify-self: center;
+    }
+}
+@media (min-width: 900px) {
+  footer .wrapper:last-of-type { column-gap: 10rem; }
+}
+/* -------- unified divider + footer spacing -------- */
+
+.hero-divider {
+    border: none;
+    border-top: 1px solid var(--sec-text);
+    opacity: 0.3;
+    width: 85%;
+    max-width: var(--container);
+    margin: 0 auto; /* spacing handled by parent containers for consistency */
+    display: block;
+}
+
+/* Footer: stack children vertically and avoid double margins */
+footer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-block: var(--divider-space); /* match divider spacing for visual rhythm */
+  box-sizing: border-box;
+  margin: 0; /* ensure no extra top margin interfering */
+}
+
+/* Remove vertical margins from wrapper to avoid stacking gaps */
+footer .wrapper {
+  margin-block: 0;
+  width: calc(100% - 2rem);
+  max-width: var(--container);
+}
+
+/* Center the last footer wrapper (contains the "Projects" label) across the full viewport */
+footer .wrapper:last-of-type {
+    /* keep projects aligned with the main content container so grid center column lines up */
+    max-width: var(--container);
+    width: calc(100% - 2rem);
+    margin-inline: auto;
+    /* on larger (3-col) breakpoints this will become a grid via media query; on small screens we enable flex below */
+    padding-block: 0;
+}
+
+/* small-screen tweak */
+@media (max-width: 717px) {
+    .hero-divider {
+        margin: 0 auto;
+        width: calc(100% - 2rem);
+    }
+  footer {
+    padding-block: 2.5rem;
+  }
+    /* match first wrapper bottom padding to footer padding-top on small screens */
+    footer .wrapper:first-of-type {
+            padding-bottom: 2.5rem;
+    }
+    /* small screens: keep Projects centered using flex */
+    footer .wrapper:last-of-type {
+        display: flex;
+        justify-content: center;
+    }
+}
+.hero-divider:last-of-type {
+    /* no extra margin; spacing controlled by wrapper/parent padding */
+    margin: 0 auto;
 }
